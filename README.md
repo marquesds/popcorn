@@ -1,5 +1,5 @@
 # Popcorn
 
-![Popcorn Logo](assets/img/popcorn.png | width=300)
+<img src="assets/img/popcorn.png" height="300" width="300" alt="Popcorn Logo">
 
 Popcorn is an API to save and retrieve movies.
