@@ -1,5 +1,6 @@
 package me.lucasmarques.popcorn.movie.model;
 
+import me.lucasmarques.popcorn.infra.config.SystemConfig;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 
 public class TestMovie {
 
-    private final ZoneId zoneId = ZoneId.of("UTC");
+    private final ZoneId zoneId = SystemConfig.getInstance().getTimezone();
 
     @Test
     public void testMovieThatIsIndicatedForGeneralAudiences() {
