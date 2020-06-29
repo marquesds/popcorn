@@ -7,9 +7,13 @@ services:
       MYSQL_ROOT_PASSWORD: abc123
       MYSQL_USER: root
     ports:
-      - 3306:3306
+      - 3307:3306
     volumes:
       - popcorn-data:/var/lib/mysql
 
 volumes:
   popcorn-data:
+
+networks:
+  popcorn_network:
+    driver: bridge

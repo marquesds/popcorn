@@ -1,7 +1,6 @@
-package me.lucasmarques.popcorn.shared;
+package me.lucasmarques.popcorn.shared.date.formatter;
 
 import me.lucasmarques.popcorn.infra.config.SystemConfig;
-import me.lucasmarques.popcorn.shared.date.DateFormatter;
 import org.junit.Assert;
 import org.junit.Test;
 

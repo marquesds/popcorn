@@ -45,6 +45,14 @@ public class SystemConfig {
         return database.getString("url");
     }
 
+    public String getDatabaseUser() {
+        return database.getString("user");
+    }
+
+    public String getDatabasePassword() {
+        return database.getString("password");
+    }
+
     private static void loadEnvironmentVariables() throws DotEnvException {
         Dotenv dotenv = Dotenv.load();
         for (DotenvEntry entry : dotenv.entries()) {

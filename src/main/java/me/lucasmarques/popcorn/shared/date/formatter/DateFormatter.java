@@ -1,4 +1,4 @@
-package me.lucasmarques.popcorn.shared.date;
+package me.lucasmarques.popcorn.shared.date.formatter;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;

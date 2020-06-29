@@ -9,3 +9,6 @@ start:
 
 stop:
 	docker-compose -f docker-compose.yml down
+
+test:
+	mvn test
