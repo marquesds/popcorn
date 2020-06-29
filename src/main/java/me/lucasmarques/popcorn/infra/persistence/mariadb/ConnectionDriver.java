@@ -1,21 +1,37 @@
 package me.lucasmarques.popcorn.infra.persistence.mariadb;
 
 import me.lucasmarques.popcorn.infra.config.SystemConfig;
+import me.lucasmarques.popcorn.infra.persistence.RelationalDatabaseConnectionDriver;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Connection;
 
-public class ConnectionDriver {
-    public static Connection getConnection() {
+public class ConnectionDriver implements RelationalDatabaseConnectionDriver {
+
+    private Connection connection;
+
+    public Connection getConnection() {
         try {
             SystemConfig config = SystemConfig.getInstance();
-            String url = config.getDatabaseUrl();
+            String url = config.getEnvironment().equals("test") ? config.getTestDatabaseUrl() : config.getDatabaseUrl();
             String user = config.getDatabaseUser();
             String password = config.getDatabasePassword();
-            return DriverManager.getConnection(url, user, password);
+
+            connection = DriverManager.getConnection(url, user, password);
+            return connection;
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void close() {
+        if (connection != null) {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

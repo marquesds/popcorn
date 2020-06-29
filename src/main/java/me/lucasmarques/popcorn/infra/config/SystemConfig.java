@@ -45,6 +45,10 @@ public class SystemConfig {
         return database.getString("url");
     }
 
+    public String getTestDatabaseUrl() {
+        return database.getString("testUrl");
+    }
+
     public String getDatabaseUser() {
         return database.getString("user");
     }
@@ -56,7 +60,11 @@ public class SystemConfig {
     private static void loadEnvironmentVariables() throws DotEnvException {
         Dotenv dotenv = Dotenv.load();
         for (DotenvEntry entry : dotenv.entries()) {
-            java.lang.System.setProperty(entry.getKey(), entry.getValue());
+            if (entry.getKey().equals("ENVIRONMENT") && java.lang.System.getProperty("ENVIRONMENT") != null) {
+                java.lang.System.setProperty("ENVIRONMENT", java.lang.System.getProperty("ENVIRONMENT"));
+            } else {
+                java.lang.System.setProperty(entry.getKey(), entry.getValue());
+            }
         }
     }
 
