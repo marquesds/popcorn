@@ -4,7 +4,6 @@ import me.lucasmarques.popcorn.actor.model.Actor;
 import me.lucasmarques.popcorn.infra.persistence.mariadb.ConnectionDriver;
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.SQLException;
@@ -37,6 +36,14 @@ public class TestRelationalDatabaseActorRepository {
     }
 
     @Test
+    public void testCannotSaveExistingActor() {
+        Actor actor = new Actor("Donald Glover");
+        Actor result = repository.save(actor);
+
+        Assert.assertNull(result);
+    }
+
+    @Test
     public void testCanFindActorByName() {
         Actor actor = repository.findByName("Donald Glover");
         Assert.assertEquals(actor.getName(), "Donald Glover");
@@ -46,14 +53,6 @@ public class TestRelationalDatabaseActorRepository {
     public void testCannotFindNonexistentActorByName() {
         Actor actor = repository.findByName("Lucas Marques");
         Assert.assertNull(actor);
-    }
-
-    @Test
-    public void testCannotSaveExistingActor() {
-        Actor actor = new Actor("Donald Glover");
-        Actor result = repository.save(actor);
-
-        Assert.assertNull(result);
     }
 
     @Test

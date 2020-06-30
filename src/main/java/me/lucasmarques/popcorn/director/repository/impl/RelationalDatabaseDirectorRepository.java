@@ -1,7 +1,7 @@
-package me.lucasmarques.popcorn.actor.repository.impl;
+package me.lucasmarques.popcorn.director.repository.impl;
 
-import me.lucasmarques.popcorn.actor.model.Actor;
-import me.lucasmarques.popcorn.actor.repository.ActorRepository;
+import me.lucasmarques.popcorn.director.model.Director;
+import me.lucasmarques.popcorn.director.repository.DirectorRepository;
 import me.lucasmarques.popcorn.infra.persistence.RelationalDatabaseConnectionDriver;
 import me.lucasmarques.popcorn.shared.date.converter.ZonedDateTimeConverter;
 import me.lucasmarques.popcorn.shared.text.converter.StringCharsetConverter;
@@ -17,24 +17,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class RelationalDatabaseActorRepository implements ActorRepository {
+public class RelationalDatabaseDirectorRepository implements DirectorRepository {
 
     private final Logger logger = LoggerFactory.getLogger(getClass().getName());
     private final RelationalDatabaseConnectionDriver driver;
 
-    public RelationalDatabaseActorRepository(RelationalDatabaseConnectionDriver driver) {
+    public RelationalDatabaseDirectorRepository(RelationalDatabaseConnectionDriver driver) {
         this.driver = driver;
     }
 
-    public Actor save(Actor actor) {
-        Actor result = null;
-        String sql = "INSERT INTO actors (id, name) "
-                + "VALUES ('" + UUID.randomUUID().toString() + "', '" + actor.getName() + "')";
+    public Director save(Director director) {
+        Director result = null;
+        String sql = "INSERT INTO directors (id, name) "
+                + "VALUES ('" + UUID.randomUUID().toString() + "', '" + director.getName() + "')";
 
-        if (findByName(actor.getName()) == null) {
+        if (findByName(director.getName()) == null) {
             try {
                 driver.executeSql(sql);
-                result = actor;
+                result = director;
             } catch (SQLException e) {
                 logger.error(String.format("Could not process insert: %s. Error: %s", sql, e.getMessage()));
             } finally {
@@ -45,14 +45,14 @@ public class RelationalDatabaseActorRepository implements ActorRepository {
         return result;
     }
 
-    public Actor findByName(String name) {
-        Actor actor = null;
-        String query = "SELECT * FROM actors WHERE name = '" + name + "' LIMIT 1";
+    public Director findByName(String name) {
+        Director director = null;
+        String query = "SELECT * FROM directors WHERE name = '" + name + "' LIMIT 1";
 
         try {
             ResultSet result = driver.executeSql(query);
             while (result.next()) {
-                actor = buildActor(result.getString("id"), result.getString("name"),
+                director = buildDirector(result.getString("id"), result.getString("name"),
                         result.getString("created_at"), result.getString("updated_at"));
             }
         } catch (SQLException e) {
@@ -61,24 +61,23 @@ public class RelationalDatabaseActorRepository implements ActorRepository {
             driver.close();
         }
 
-        return actor;
+        return director;
     }
 
-    public List<Actor> findByMovieId(UUID movieId) {
-        List<Actor> actors = new ArrayList<>();
+    public List<Director> findByMovieId(UUID movieId) {
+        List<Director> directors = new ArrayList<>();
 
-        String query = "SELECT * FROM actors AS a "
-                + "JOIN movies_actors AS ma "
-                + "ON ma.actor_id = a.id "
-                + "WHERE ma.movie_id = '" + movieId.toString() + "' "
-                + "LIMIT 10";
+        String query = "SELECT * FROM directors AS d "
+                + "JOIN movies_directors AS md "
+                + "ON md.director_id = d.id "
+                + "WHERE md.movie_id = '" + movieId.toString() + "' ";
 
         try {
             ResultSet result = driver.executeSql(query);
             while (result.next()) {
-                Actor actor = buildActor(result.getString("id"), result.getString("name"),
+                Director director = buildDirector(result.getString("id"), result.getString("name"),
                         result.getString("created_at"), result.getString("updated_at"));
-                actors.add(actor);
+                directors.add(director);
             }
         } catch (SQLException e) {
             logger.error(String.format("Could not process query: %s. Error: %s", query, e.getMessage()));
@@ -86,14 +85,14 @@ public class RelationalDatabaseActorRepository implements ActorRepository {
             driver.close();
         }
 
-        return actors;
+        return directors;
     }
 
-    public Actor buildActor(String id, String name, String createdAt, String updatedAt) {
-        UUID actorId = UUID.fromString(id);
+    public Director buildDirector(String id, String name, String createdAt, String updatedAt) {
+        UUID directorId = UUID.fromString(id);
         String actorName = StringCharsetConverter.convert(name, StandardCharsets.ISO_8859_1, StandardCharsets.UTF_8);
         ZonedDateTime actorCreatedAt = ZonedDateTimeConverter.fromTimestamp(Timestamp.valueOf(createdAt));
         ZonedDateTime actorUpdatedAt = ZonedDateTimeConverter.fromTimestamp(Timestamp.valueOf(updatedAt));
-        return new Actor(actorId, actorName, actorCreatedAt, actorUpdatedAt);
+        return new Director(directorId, actorName, actorCreatedAt, actorUpdatedAt);
     }
 }

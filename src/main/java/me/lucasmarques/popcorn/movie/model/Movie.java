@@ -1,5 +1,7 @@
 package me.lucasmarques.popcorn.movie.model;
 
+import me.lucasmarques.popcorn.actor.model.Actor;
+import me.lucasmarques.popcorn.director.model.Director;
 import me.lucasmarques.popcorn.shared.abstraction.Entity;
 
 import java.time.ZonedDateTime;
@@ -11,26 +13,26 @@ public class Movie extends Entity {
     private String name;
     private ZonedDateTime launchDate;
     private Rating rating;
-    private List<Entity> directors;
-    private List<Entity> cast;
+    private List<Director> directedBy;
+    private List<Actor> cast;
 
-    public Movie(UUID id, String name, ZonedDateTime launchDate, Rating rating, List<Entity> directors, List<Entity> cast,
+    public Movie(UUID id, String name, ZonedDateTime launchDate, Rating rating, List<Director> directedBy, List<Actor> cast,
                  ZonedDateTime createdAt, ZonedDateTime updatedAt) {
         this.setId(id);
         this.name = name;
         this.launchDate = launchDate;
         this.rating = rating;
-        this.directors = directors;
+        this.directedBy = directedBy;
         this.cast = cast;
         this.setCreatedAt(createdAt);
         this.setUpdatedAt(updatedAt);
     }
 
-    public Movie(String name, ZonedDateTime launchDate, Rating rating, List<Entity> directors, List<Entity> cast) {
+    public Movie(String name, ZonedDateTime launchDate, Rating rating, List<Director> directedBy, List<Actor> cast) {
         this.name = name;
         this.launchDate = launchDate;
         this.rating = rating;
-        this.directors = directors;
+        this.directedBy = directedBy;
         this.cast = cast;
     }
 
@@ -42,39 +44,19 @@ public class Movie extends Entity {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public ZonedDateTime getLaunchDate() {
         return launchDate;
-    }
-
-    public void setLaunchDate(ZonedDateTime launchDate) {
-        this.launchDate = launchDate;
     }
 
     public Rating getRating() {
         return rating;
     }
 
-    public void setRating(Rating rating) {
-        this.rating = rating;
+    public List<Director> getDirectedBy() {
+        return directedBy;
     }
 
-    public List<Entity> getDirectors() {
-        return directors;
-    }
-
-    public void setDirectors(List<Entity> directors) {
-        this.directors = directors;
-    }
-
-    public List<Entity> getCast() {
+    public List<Actor> getCast() {
         return cast;
-    }
-
-    public void setCast(List<Entity> cast) {
-        this.cast = cast;
     }
 }
