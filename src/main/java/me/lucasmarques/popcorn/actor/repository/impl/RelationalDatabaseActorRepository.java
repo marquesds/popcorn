@@ -9,7 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +27,37 @@ public class RelationalDatabaseActorRepository implements ActorRepository {
     }
 
     public Actor save(Actor actor) {
-        return null;
+        Actor result = null;
+        String sql = "INSERT INTO actors (id, name) "
+                + "VALUES ('" + UUID.randomUUID().toString() + "', '" + actor.getName() + "')";
+
+        if (findByName(actor.getName()) == null) {
+            try {
+                driver.executeSql(sql);
+                result = actor;
+            } catch (SQLException e) {
+                logger.error(String.format("Could not process insert: %s. Error: %s", sql, e.getMessage()));
+            }
+        }
+
+        return result;
+    }
+
+    public Actor findByName(String name) {
+        Actor actor = null;
+        String query = "SELECT * FROM actors WHERE name = '" + name + "' LIMIT 1";
+
+        try {
+            ResultSet result = driver.executeSql(query);
+            while (result.next()) {
+                actor = buildActor(result.getString("id"), result.getString("name"),
+                        result.getString("created_at"), result.getString("updated_at"));
+            }
+        } catch (SQLException e) {
+            logger.error(String.format("Could not process query: %s. Error: %s", query, e.getMessage()));
+        }
+
+        return actor;
     }
 
     public List<Actor> findByMovieId(UUID movieId) {
@@ -38,13 +70,14 @@ public class RelationalDatabaseActorRepository implements ActorRepository {
                 + "LIMIT 10";
 
         try {
-            ResultSet result = executeQuery(query);
+            ResultSet result = driver.executeSql(query);
             while (result.next()) {
                 Actor actor = buildActor(result.getString("id"), result.getString("name"),
                         result.getString("created_at"), result.getString("updated_at"));
                 actors.add(actor);
             }
         } catch (SQLException e) {
+            logger.error(String.format("Could not process query: %s. Error: %s", query, e.getMessage()));
         } finally {
             driver.close();
         }
@@ -52,22 +85,11 @@ public class RelationalDatabaseActorRepository implements ActorRepository {
         return actors;
     }
 
-    private Actor buildActor(String id, String name, String createdAt, String updatedAt) {
+    public Actor buildActor(String id, String name, String createdAt, String updatedAt) {
         UUID actorId = UUID.fromString(id);
         String actorName = StringCharsetConverter.convert(name, StandardCharsets.ISO_8859_1, StandardCharsets.UTF_8);
         ZonedDateTime actorCreatedAt = ZonedDateTimeConverter.fromTimestamp(Timestamp.valueOf(createdAt));
         ZonedDateTime actorUpdatedAt = ZonedDateTimeConverter.fromTimestamp(Timestamp.valueOf(updatedAt));
         return new Actor(actorId, actorName, actorCreatedAt, actorUpdatedAt);
-    }
-
-    private ResultSet executeQuery(String query) {
-        ResultSet result = null;
-
-        try {
-            PreparedStatement preparedStatement = driver.getConnection().prepareStatement(query);
-            result = preparedStatement.executeQuery();
-        } catch (SQLException e) {
-        }
-        return result;
     }
 }

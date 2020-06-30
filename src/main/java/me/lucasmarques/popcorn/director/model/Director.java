@@ -28,4 +28,8 @@ public class Director extends Entity {
         this.name = name;
     }
 
+    public String toString() {
+        return this.name;
+    }
+
 }

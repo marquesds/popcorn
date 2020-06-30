@@ -3,9 +3,7 @@ package me.lucasmarques.popcorn.infra.persistence.mariadb;
 import me.lucasmarques.popcorn.infra.config.SystemConfig;
 import me.lucasmarques.popcorn.infra.persistence.RelationalDatabaseConnectionDriver;
 
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Connection;
+import java.sql.*;
 
 public class ConnectionDriver implements RelationalDatabaseConnectionDriver {
 
@@ -33,5 +31,10 @@ public class ConnectionDriver implements RelationalDatabaseConnectionDriver {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    public ResultSet executeSql(String sql) throws SQLException {
+        PreparedStatement preparedStatement = getConnection().prepareStatement(sql);
+        return preparedStatement.executeQuery();
     }
 }
