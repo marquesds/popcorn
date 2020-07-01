@@ -17,5 +17,6 @@ public interface MovieRepository {
     Map<Movie, List<Actor>> relateActorsToMovie(List<Actor> actors, Movie movie);
     Map<Movie, List<Director>> relateDirectorsToMovie(List<Director> directors, Movie movie);
     List<Movie> findByRating(Rating rating);
+    List<Movie> findByNotEqualRating(Rating rating);
 
 }

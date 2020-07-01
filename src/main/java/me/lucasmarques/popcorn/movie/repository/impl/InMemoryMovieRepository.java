@@ -59,4 +59,11 @@ public class InMemoryMovieRepository implements MovieRepository {
                 .filter(m -> m.getRating().equals(rating))
                 .collect(Collectors.toList());
     }
+
+    public List<Movie> findByNotEqualRating(Rating rating) {
+        return initialData
+                .stream()
+                .filter(m -> !m.getRating().equals(rating))
+                .collect(Collectors.toList());
+    }
 }

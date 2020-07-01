@@ -2,6 +2,7 @@ package me.lucasmarques.popcorn.director.repository.impl;
 
 import me.lucasmarques.popcorn.director.model.Director;
 import me.lucasmarques.popcorn.director.repository.DirectorRepository;
+import me.lucasmarques.popcorn.infra.persistence.DatabaseName;
 import me.lucasmarques.popcorn.infra.persistence.RelationalDatabaseConnectionDriver;
 import me.lucasmarques.popcorn.shared.date.converter.ZonedDateTimeConverter;
 import me.lucasmarques.popcorn.shared.text.converter.StringCharsetConverter;
@@ -21,6 +22,7 @@ public class RelationalDatabaseDirectorRepository implements DirectorRepository 
 
     private final Logger logger = LoggerFactory.getLogger(getClass().getName());
     private final RelationalDatabaseConnectionDriver driver;
+    private final String databaseName = DatabaseName.DIRECTORS.value;
 
     public RelationalDatabaseDirectorRepository(RelationalDatabaseConnectionDriver driver) {
         this.driver = driver;
@@ -28,8 +30,8 @@ public class RelationalDatabaseDirectorRepository implements DirectorRepository 
 
     public Director save(Director director) {
         Director result = null;
-        String sql = "INSERT INTO directors (id, name) "
-                + "VALUES ('" + UUID.randomUUID().toString() + "', '" + director.getName() + "')";
+        String sql = String.format("INSERT INTO %s (id, name) VALUES ('%s', '%s')",
+                databaseName, UUID.randomUUID().toString(), director.getName());
 
         if (findByName(director.getName()) == null) {
             try {
@@ -47,7 +49,7 @@ public class RelationalDatabaseDirectorRepository implements DirectorRepository 
 
     public Director findByName(String name) {
         Director director = null;
-        String query = "SELECT * FROM directors WHERE name = '" + name + "' LIMIT 1";
+        String query = String.format("SELECT * FROM %s WHERE name = '%s' LIMIT 1", databaseName, name);
 
         try {
             ResultSet result = driver.executeSql(query);
@@ -67,10 +69,11 @@ public class RelationalDatabaseDirectorRepository implements DirectorRepository 
     public List<Director> findByMovieId(UUID movieId) {
         List<Director> directors = new ArrayList<>();
 
-        String query = "SELECT * FROM directors AS d "
-                + "JOIN movies_directors AS md "
+        String query = String.format("SELECT * FROM %s AS d "
+                + "JOIN %s AS md "
                 + "ON md.director_id = d.id "
-                + "WHERE md.movie_id = '" + movieId.toString() + "' ";
+                + "WHERE md.movie_id = '%s'",
+                databaseName, DatabaseName.MOVIES_DIRECTORS.value, movieId.toString());
 
         try {
             ResultSet result = driver.executeSql(query);

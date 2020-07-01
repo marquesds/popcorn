@@ -2,6 +2,7 @@ package me.lucasmarques.popcorn.actor.repository.impl;
 
 import me.lucasmarques.popcorn.actor.model.Actor;
 import me.lucasmarques.popcorn.actor.repository.ActorRepository;
+import me.lucasmarques.popcorn.infra.persistence.DatabaseName;
 import me.lucasmarques.popcorn.infra.persistence.RelationalDatabaseConnectionDriver;
 import me.lucasmarques.popcorn.shared.date.converter.ZonedDateTimeConverter;
 import me.lucasmarques.popcorn.shared.text.converter.StringCharsetConverter;
@@ -21,6 +22,7 @@ public class RelationalDatabaseActorRepository implements ActorRepository {
 
     private final Logger logger = LoggerFactory.getLogger(getClass().getName());
     private final RelationalDatabaseConnectionDriver driver;
+    private final String databaseName = DatabaseName.ACTORS.value;
 
     public RelationalDatabaseActorRepository(RelationalDatabaseConnectionDriver driver) {
         this.driver = driver;
@@ -28,8 +30,8 @@ public class RelationalDatabaseActorRepository implements ActorRepository {
 
     public Actor save(Actor actor) {
         Actor result = null;
-        String sql = "INSERT INTO actors (id, name) "
-                + "VALUES ('" + UUID.randomUUID().toString() + "', '" + actor.getName() + "')";
+        String sql = String.format("INSERT INTO %s (id, name) VALUES ('%s', '%s')",
+                databaseName, UUID.randomUUID().toString(), actor.getName());
 
         if (findByName(actor.getName()) == null) {
             try {
@@ -47,7 +49,7 @@ public class RelationalDatabaseActorRepository implements ActorRepository {
 
     public Actor findByName(String name) {
         Actor actor = null;
-        String query = "SELECT * FROM actors WHERE name = '" + name + "' LIMIT 1";
+        String query = String.format("SELECT * FROM %s WHERE name = '%s' LIMIT 1", databaseName, name);
 
         try {
             ResultSet result = driver.executeSql(query);
@@ -66,12 +68,12 @@ public class RelationalDatabaseActorRepository implements ActorRepository {
 
     public List<Actor> findByMovieId(UUID movieId) {
         List<Actor> actors = new ArrayList<>();
-
-        String query = "SELECT * FROM actors AS a "
-                + "JOIN movies_actors AS ma "
+        String query = String.format("SELECT * FROM %s AS a "
+                + "JOIN %s AS ma "
                 + "ON ma.actor_id = a.id "
-                + "WHERE ma.movie_id = '" + movieId.toString() + "' "
-                + "LIMIT 10";
+                + "WHERE ma.movie_id = '%s' "
+                + "LIMIT 10",
+                databaseName, DatabaseName.MOVIES_ACTORS.value, movieId.toString());
 
         try {
             ResultSet result = driver.executeSql(query);

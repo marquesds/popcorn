@@ -34,7 +34,7 @@ public class InMemoryActorRepository implements ActorRepository {
                 .filter(a -> a.getName().equals(name))
                 .collect(Collectors.toList());
 
-        if (result.size() >= 1) {
+        if (result.size() > 0) {
             foundActor = result.get(0);
         }
 
@@ -48,7 +48,7 @@ public class InMemoryActorRepository implements ActorRepository {
                 .filter(m -> m.getId().equals(movieId))
                 .collect(Collectors.toList());
 
-        if (moviesResult.size() >= 1) {
+        if (moviesResult.size() > 0) {
             Movie movie = moviesResult.get(0);
             actors.add(relationship.get(movie));
         }
