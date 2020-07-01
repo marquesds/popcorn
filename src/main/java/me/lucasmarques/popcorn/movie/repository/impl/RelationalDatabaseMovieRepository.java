@@ -39,9 +39,8 @@ public class RelationalDatabaseMovieRepository implements MovieRepository {
 
     public Movie save(Movie movie) {
         Movie result = null;
-        String sql = String.format("INSERT INTO %s (id, name, launch_date, rating) VALUES ('%s', '%s', %s, '%s')",
-                databaseName, UUID.randomUUID(), movie.getName(),
-                Timestamp.valueOf(movie.getLaunchDate().toLocalDateTime()), movie.getRating());
+        String sql = String.format("INSERT INTO %s (id, name, launch_date, rating) VALUES ('%s', '%s', '%s', '%s')",
+                databaseName, UUID.randomUUID(), movie.getName(), movie.getLaunchDate().toLocalDate(), movie.getRating());
 
         if (findByName(movie.getName()) == null) {
             try {

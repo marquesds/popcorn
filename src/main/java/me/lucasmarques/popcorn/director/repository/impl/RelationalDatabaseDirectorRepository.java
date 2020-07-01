@@ -31,7 +31,7 @@ public class RelationalDatabaseDirectorRepository implements DirectorRepository 
     public Director save(Director director) {
         Director result = null;
         String sql = String.format("INSERT INTO %s (id, name) VALUES ('%s', '%s')",
-                databaseName, UUID.randomUUID().toString(), director.getName());
+                databaseName, UUID.randomUUID(), director.getName());
 
         if (findByName(director.getName()) == null) {
             try {
@@ -73,7 +73,7 @@ public class RelationalDatabaseDirectorRepository implements DirectorRepository 
                 + "JOIN %s AS md "
                 + "ON md.director_id = d.id "
                 + "WHERE md.movie_id = '%s'",
-                databaseName, DatabaseName.MOVIES_DIRECTORS.value, movieId.toString());
+                databaseName, DatabaseName.MOVIES_DIRECTORS.value, movieId);
 
         try {
             ResultSet result = driver.executeSql(query);

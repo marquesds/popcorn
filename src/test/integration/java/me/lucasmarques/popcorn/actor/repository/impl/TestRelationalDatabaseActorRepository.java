@@ -1,6 +1,7 @@
 package me.lucasmarques.popcorn.actor.repository.impl;
 
 import me.lucasmarques.popcorn.actor.model.Actor;
+import me.lucasmarques.popcorn.infra.persistence.DatabaseName;
 import me.lucasmarques.popcorn.infra.persistence.mariadb.ConnectionDriver;
 import org.junit.After;
 import org.junit.Assert;
@@ -19,7 +20,7 @@ public class TestRelationalDatabaseActorRepository {
     public void after() {
         Actor actor = repository.findByName("Angelina Jolie");
         if (actor != null) {
-            String sql = "DELETE FROM actors WHERE id = '" + actor.getId().toString() + "'";
+            String sql = String.format("DELETE FROM %s WHERE id = '%s'", DatabaseName.ACTORS.value, actor.getId());
             try {
                 driver.executeSql(sql);
             } catch (SQLException e) {

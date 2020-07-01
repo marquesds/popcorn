@@ -36,6 +36,12 @@ public class Movie extends Entity {
         this.cast = cast;
     }
 
+    public Movie(String name, ZonedDateTime launchDate, Rating rating) {
+        this.name = name;
+        this.launchDate = launchDate;
+        this.rating = rating;
+    }
+
     public Boolean isIndicatedForGeneralAudiences() {
         return getRating().equals(Rating.G);
     }

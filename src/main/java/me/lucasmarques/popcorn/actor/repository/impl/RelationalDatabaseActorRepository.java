@@ -31,7 +31,7 @@ public class RelationalDatabaseActorRepository implements ActorRepository {
     public Actor save(Actor actor) {
         Actor result = null;
         String sql = String.format("INSERT INTO %s (id, name) VALUES ('%s', '%s')",
-                databaseName, UUID.randomUUID().toString(), actor.getName());
+                databaseName, UUID.randomUUID(), actor.getName());
 
         if (findByName(actor.getName()) == null) {
             try {
@@ -73,7 +73,7 @@ public class RelationalDatabaseActorRepository implements ActorRepository {
                 + "ON ma.actor_id = a.id "
                 + "WHERE ma.movie_id = '%s' "
                 + "LIMIT 10",
-                databaseName, DatabaseName.MOVIES_ACTORS.value, movieId.toString());
+                databaseName, DatabaseName.MOVIES_ACTORS.value, movieId);
 
         try {
             ResultSet result = driver.executeSql(query);
