@@ -5,10 +5,7 @@ import me.lucasmarques.popcorn.actor.repository.impl.RelationalDatabaseActorRepo
 import me.lucasmarques.popcorn.director.repository.DirectorRepository;
 import me.lucasmarques.popcorn.director.repository.impl.RelationalDatabaseDirectorRepository;
 import me.lucasmarques.popcorn.infra.persistence.mariadb.ConnectionDriver;
-import me.lucasmarques.popcorn.movie.exception.CastMissingException;
-import me.lucasmarques.popcorn.movie.exception.DirectedByMissingException;
-import me.lucasmarques.popcorn.movie.exception.InvalidBodyException;
-import me.lucasmarques.popcorn.movie.exception.MovieAlreadyPersistedException;
+import me.lucasmarques.popcorn.movie.exception.*;
 import me.lucasmarques.popcorn.movie.model.Censorship;
 import me.lucasmarques.popcorn.movie.model.Movie;
 import me.lucasmarques.popcorn.movie.repository.MovieRepository;
@@ -57,7 +54,7 @@ public class Api {
                     try {
                         Movie movie = MovieDeserializer.deserializer(req.body());
                         service.save(movie);
-                    } catch (MovieAlreadyPersistedException | CastMissingException | DirectedByMissingException | InvalidBodyException e) {
+                    } catch (MovieAlreadyPersistedException | CastMissingException | DirectedByMissingException | InvalidBodyException | InvalidCastLengthException e) {
                         res.status(400);
                         return String.format("{\"message\":\"%s\"}", e.getMessage());
                     }

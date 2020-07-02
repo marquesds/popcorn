@@ -6,6 +6,7 @@ import me.lucasmarques.popcorn.director.model.Director;
 import me.lucasmarques.popcorn.director.repository.DirectorRepository;
 import me.lucasmarques.popcorn.movie.exception.CastMissingException;
 import me.lucasmarques.popcorn.movie.exception.DirectedByMissingException;
+import me.lucasmarques.popcorn.movie.exception.InvalidCastLengthException;
 import me.lucasmarques.popcorn.movie.exception.MovieAlreadyPersistedException;
 import me.lucasmarques.popcorn.movie.model.Censorship;
 import me.lucasmarques.popcorn.movie.model.Movie;
@@ -31,7 +32,7 @@ public class MovieService {
         this.actorRepository = actorRepository;
     }
 
-    public void save(Movie movie) throws MovieAlreadyPersistedException, CastMissingException, DirectedByMissingException {
+    public void save(Movie movie) throws MovieAlreadyPersistedException, CastMissingException, DirectedByMissingException, InvalidCastLengthException {
         validateMovie(movie);
 
         movieRepository.save(movie);
@@ -75,7 +76,7 @@ public class MovieService {
         return result;
     }
 
-    private void validateMovie(Movie movie) throws CastMissingException, DirectedByMissingException, MovieAlreadyPersistedException {
+    private void validateMovie(Movie movie) throws CastMissingException, DirectedByMissingException, MovieAlreadyPersistedException, InvalidCastLengthException {
         if (isMoviePersisted(movie)) {
             String errorMessage = String.format("The movie %s is already persisted on database.", movie.getName());
             logger.error(errorMessage);
@@ -92,6 +93,12 @@ public class MovieService {
             String errorMessage = String.format("The movie %s dont have any director.", movie.getName());
             logger.error(errorMessage);
             throw new DirectedByMissingException(errorMessage);
+        }
+
+        if (movie.getCast().size() > 10) {
+            String errorMessage = String.format("%d is an invalid cast length. Limit: 10.", movie.getCast().size());
+            logger.error(errorMessage);
+            throw new InvalidCastLengthException(errorMessage);
         }
     }
 
