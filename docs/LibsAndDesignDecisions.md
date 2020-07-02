@@ -2,7 +2,7 @@
 Here I list my design decisions, and the motivation for use the libraries founded at `pom.xml`.
 
 ### Libraries
-  - Database: For simplicity I decided to use MariaDB that is an "improved MySQL". I'm connecting with the database using only its connection library.
+  - Database: For simplicity I decided to use `MariaDB` that is an "improved MySQL". I'm connecting with the database using only its connection driver.
   - API: I'm using `Spark Java` which is a lightweight web framework
   - Json serialization/deserialization: For simplicity I decided to use `Gson`
   - Environment variables: I'm using `Typesafe's Config` library for use in memory environment variables inside the project and I'm `java-dotenv` to load .env vars int the memory
