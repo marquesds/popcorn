@@ -37,8 +37,8 @@ You can import the Postman's collection wit some requests [here](docs/postman/po
 
 Links for entire documentation:
 
-    - [Movies' APIs](docs/movies/Movies.md)
-    - [Libraries and Design decisions](docs/LibsAndDesignDecisions.md)
+  - [Movies APIs](docs/movies/Movies.md)
+  - [Libraries and Design decisions](docs/LibsAndDesignDecisions.md)
 
 ## Licence
 
