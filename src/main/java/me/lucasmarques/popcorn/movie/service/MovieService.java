@@ -96,7 +96,7 @@ public class MovieService {
         }
 
         if (movie.getCast().size() > 10) {
-            String errorMessage = String.format("%d is an invalid cast length. Limit: 10.", movie.getCast().size());
+            String errorMessage = String.format("Invalid cast length (%d). Max cast length: 10.", movie.getCast().size());
             logger.error(errorMessage);
             throw new InvalidCastLengthException(errorMessage);
         }

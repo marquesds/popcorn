@@ -1,15 +1,13 @@
 package me.lucasmarques.popcorn.director.repository.impl;
 
 import me.lucasmarques.popcorn.director.model.Director;
-import me.lucasmarques.popcorn.infra.persistence.DatabaseName;
 import me.lucasmarques.popcorn.infra.persistence.mariadb.ConnectionDriver;
+import me.lucasmarques.popcorn.utils.TestUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,17 +24,7 @@ public class TestRelationalDatabaseDirectorRepository {
 
     @After
     public void after() {
-        Director director = repository.findByName("Quentin Tarantino");
-        if (director != null) {
-            String sql = String.format("DELETE FROM %s WHERE id = '%s'", DatabaseName.DIRECTORS.value, director.getId());
-            try {
-                ResultSet resultSet = driver.executeSql(sql);
-                resultSet.close();
-            } catch (SQLException e) {
-            } finally {
-                driver.close();
-            }
-        }
+        TestUtils.cleanDatabase();
     }
 
     @Test

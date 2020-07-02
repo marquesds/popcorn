@@ -10,8 +10,8 @@ import me.lucasmarques.popcorn.movie.model.Censorship;
 import me.lucasmarques.popcorn.movie.model.Movie;
 import me.lucasmarques.popcorn.movie.repository.MovieRepository;
 import me.lucasmarques.popcorn.movie.repository.impl.RelationalDatabaseMovieRepository;
-import me.lucasmarques.popcorn.movie.serializer.MovieDeserializer;
-import me.lucasmarques.popcorn.movie.serializer.MovieSerializer;
+import me.lucasmarques.popcorn.movie.schema.MovieDeserializer;
+import me.lucasmarques.popcorn.movie.schema.MovieSerializer;
 import me.lucasmarques.popcorn.movie.service.MovieService;
 
 import static spark.Spark.*;

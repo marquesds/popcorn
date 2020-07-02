@@ -1,4 +1,4 @@
-package me.lucasmarques.popcorn.movie.serializer;
+package me.lucasmarques.popcorn.movie.schema;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;

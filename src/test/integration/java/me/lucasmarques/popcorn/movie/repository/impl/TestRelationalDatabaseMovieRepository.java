@@ -5,17 +5,15 @@ import me.lucasmarques.popcorn.actor.repository.impl.RelationalDatabaseActorRepo
 import me.lucasmarques.popcorn.director.model.Director;
 import me.lucasmarques.popcorn.director.repository.impl.RelationalDatabaseDirectorRepository;
 import me.lucasmarques.popcorn.infra.config.SystemConfig;
-import me.lucasmarques.popcorn.infra.persistence.DatabaseName;
 import me.lucasmarques.popcorn.infra.persistence.mariadb.ConnectionDriver;
 import me.lucasmarques.popcorn.movie.model.Movie;
 import me.lucasmarques.popcorn.movie.model.Rating;
+import me.lucasmarques.popcorn.utils.TestUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,88 +30,6 @@ public class TestRelationalDatabaseMovieRepository {
 
     RelationalDatabaseMovieRepository repository;
 
-    private void deleteMovies(List<Movie> movies) {
-        for (Movie movie : movies) {
-            try {
-                if (movie != null) {
-                    String sql = String.format("DELETE FROM %s WHERE id = '%s'", DatabaseName.MOVIES.value, movie.getId());
-                    ResultSet resultSet = driver.executeSql(sql);
-                    resultSet.close();
-                }
-            } catch (SQLException e) {
-            } finally {
-                driver.close();
-            }
-        }
-    }
-
-    private void deleteActors(List<Actor> actors) {
-        for (Actor actor : actors) {
-            try {
-                if (actor != null) {
-                    String sql1 = String.format("DELETE FROM %s WHERE actor_id = '%s'", DatabaseName.MOVIES_ACTORS.value, actor.getId());
-                    String sql2 = String.format("DELETE FROM %s WHERE id = '%s'", DatabaseName.ACTORS.value, actor.getId());
-
-                    ResultSet resultSet1 = driver.executeSql(sql1);
-                    ResultSet resultSet2 = driver.executeSql(sql2);
-                    resultSet1.close();
-                    resultSet2.close();
-                }
-            } catch (SQLException e) {
-            } finally {
-                driver.close();
-            }
-        }
-    }
-
-    private void deleteDirectors(List<Director> directors) {
-        for (Director director : directors) {
-            try {
-                if (director != null) {
-                    String sql1 = String.format("DELETE FROM %s WHERE director_id = '%s'", DatabaseName.MOVIES_DIRECTORS.value, director.getId());
-                    String sql2 = String.format("DELETE FROM %s WHERE id = '%s'", DatabaseName.MOVIES.value, director.getId());
-
-                    ResultSet resultSet1 = driver.executeSql(sql1);
-                    ResultSet resultSet2 = driver.executeSql(sql2);
-                    resultSet1.close();
-                    resultSet2.close();
-                }
-            } catch (SQLException e) {
-            } finally {
-                driver.close();
-            }
-        }
-    }
-
-    public void cleanMoviesDatabase() {
-        List<Movie> movies = new ArrayList<>();
-
-        movies.add(repository.findByName("The Vast Night"));
-        movies.add(repository.findByName("Interstellar"));
-        movies.add(repository.findByName("Eternal Sunshine of the Spotless Mind"));
-
-        deleteMovies(movies);
-    }
-
-    public void cleanActorsDatabase() {
-        List<Actor> actors = new ArrayList<>();
-        actors.add(new Actor("Matthew McConaughey"));
-        actors.add(new Actor("Anne Hathaway"));
-        actors.add(new Actor("Jessica Chastain"));
-        actors.add(new Actor("Casey Affleck"));
-        actors.add(new Actor("Wes Bentley"));
-
-        deleteActors(actors);
-    }
-
-    public void cleanDirectorsDatabase() {
-        List<Director> directors = new ArrayList<>();
-        Director director = directorRepository.findByName("Christopher Nolan");
-        directors.add(director);
-
-        deleteDirectors(directors);
-    }
-
     @Before
     public void before() {
         driver = new ConnectionDriver();
@@ -125,9 +41,7 @@ public class TestRelationalDatabaseMovieRepository {
 
     @After
     public void after() {
-        cleanMoviesDatabase();
-        cleanActorsDatabase();
-        cleanDirectorsDatabase();
+        TestUtils.cleanDatabase();
     }
 
     @Test
