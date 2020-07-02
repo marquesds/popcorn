@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class InMemoryMovieRepository implements MovieRepository {
 
-    private List<Movie> initialData;
+    private final List<Movie> initialData;
 
     public InMemoryMovieRepository(List<Movie> initialData) {
         this.initialData = initialData;
@@ -30,7 +30,7 @@ public class InMemoryMovieRepository implements MovieRepository {
                 .stream()
                 .filter(m -> m.getName().equals(name))
                 .findFirst()
-                .orElseGet(null);
+                .orElse(null);
     }
 
     public Movie findById(UUID id) {
@@ -38,7 +38,7 @@ public class InMemoryMovieRepository implements MovieRepository {
                 .stream()
                 .filter(m -> m.getId().equals(id))
                 .findFirst()
-                .orElseGet(null);
+                .orElse(null);
     }
 
     public Map<Movie, List<Actor>> relateActorsToMovie(List<Actor> actors, Movie movie) {
