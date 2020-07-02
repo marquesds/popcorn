@@ -46,20 +46,40 @@ public class Movie extends Entity {
         return getRating().equals(Rating.G);
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setLaunchDate(ZonedDateTime launchDate) {
+        this.launchDate = launchDate;
     }
 
     public ZonedDateTime getLaunchDate() {
         return launchDate;
     }
 
+    public void setRating(Rating rating) {
+        this.rating = rating;
+    }
+
     public Rating getRating() {
         return rating;
     }
 
+    public void setDirectedBy(List<Director> directedBy) {
+        this.directedBy = directedBy;
+    }
+
     public List<Director> getDirectedBy() {
         return directedBy;
+    }
+
+    public void setCast(List<Actor> cast) {
+        this.cast = cast;
     }
 
     public List<Actor> getCast() {

@@ -1,34 +1,72 @@
 package me.lucasmarques.popcorn.api.v1;
 
-import me.lucasmarques.popcorn.actor.model.Actor;
-import me.lucasmarques.popcorn.director.model.Director;
-import me.lucasmarques.popcorn.infra.config.SystemConfig;
+import me.lucasmarques.popcorn.actor.repository.ActorRepository;
+import me.lucasmarques.popcorn.actor.repository.impl.RelationalDatabaseActorRepository;
+import me.lucasmarques.popcorn.director.repository.DirectorRepository;
+import me.lucasmarques.popcorn.director.repository.impl.RelationalDatabaseDirectorRepository;
+import me.lucasmarques.popcorn.infra.persistence.mariadb.ConnectionDriver;
+import me.lucasmarques.popcorn.movie.exception.CastMissingException;
+import me.lucasmarques.popcorn.movie.exception.DirectedByMissingException;
+import me.lucasmarques.popcorn.movie.exception.InvalidBodyException;
+import me.lucasmarques.popcorn.movie.exception.MovieAlreadyPersistedException;
+import me.lucasmarques.popcorn.movie.model.Censorship;
 import me.lucasmarques.popcorn.movie.model.Movie;
-import me.lucasmarques.popcorn.movie.model.Rating;
+import me.lucasmarques.popcorn.movie.repository.MovieRepository;
+import me.lucasmarques.popcorn.movie.repository.impl.RelationalDatabaseMovieRepository;
+import me.lucasmarques.popcorn.movie.serializer.MovieDeserializer;
 import me.lucasmarques.popcorn.movie.serializer.MovieSerializer;
+import me.lucasmarques.popcorn.movie.service.MovieService;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import static spark.Spark.get;
+import static spark.Spark.*;
 
 public class Api {
 
     public static void main(String[] args) {
-        System.out.println(SystemConfig.getInstance().getDatabaseUrl());
 
-        ZoneId zoneId = ZoneId.of("UTC");
-        ZonedDateTime launchDate = ZonedDateTime.of(2019, 7, 9, 0, 0, 0, 0, zoneId);
-        List<Actor> actors = new ArrayList<>();
-        actors.add(new Actor("Lucas Marques"));
-        actors.add(new Actor("Larissa Cristina"));
-        List<Director> directors = new ArrayList<>();
-        directors.add(new Director("Quentin Tarantino"));
-        Movie movie = new Movie(UUID.randomUUID(), "Lion King", launchDate, Rating.G, directors, actors, ZonedDateTime.now(), ZonedDateTime.now());
-        get("/hello", (req, res) -> MovieSerializer.serialize(movie));
+        ConnectionDriver connection = new ConnectionDriver();
+
+        ActorRepository actorRepository = new RelationalDatabaseActorRepository(connection);
+        DirectorRepository directorRepository = new RelationalDatabaseDirectorRepository(connection);
+        MovieRepository movieRepository = new RelationalDatabaseMovieRepository(connection, directorRepository, actorRepository);
+
+        MovieService service = new MovieService(movieRepository, directorRepository, actorRepository);
+
+        path("/api", () -> {
+            path("/v1", () -> {
+                get("/movies", (req, res) -> {
+                    res.type("application/json");
+                    String censorship = req.queryMap().get("censura").value();
+
+                    if (censorship != null) {
+                        if (censorship.equals("CENSURADO")) {
+                            res.status(200);
+                            return MovieSerializer.serialize(service.findByCensorship(Censorship.CENSORED));
+                        } else if (censorship.equals("SEM_CENSURA")) {
+                            res.status(200);
+                            return MovieSerializer.serialize(service.findByCensorship(Censorship.NOT_CENSORED));
+                        }
+                    }
+
+                    res.status(404);
+                    return "{\"message\":\"Not found any movie.\"}";
+                });
+
+                post("/movies", (req, res) -> {
+                    res.type("application/json");
+
+                    try {
+                        Movie movie = MovieDeserializer.deserializer(req.body());
+                        service.save(movie);
+                    } catch (MovieAlreadyPersistedException | CastMissingException | DirectedByMissingException | InvalidBodyException e) {
+                        res.status(400);
+                        return String.format("{\"message\":\"%s\"}", e.getMessage());
+                    }
+
+                    res.status(201);
+                    return "{\"message\":\"Movie created.\"}";
+                });
+            });
+        });
     }
 
 }

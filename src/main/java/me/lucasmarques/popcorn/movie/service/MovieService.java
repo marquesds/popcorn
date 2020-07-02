@@ -14,6 +14,7 @@ import me.lucasmarques.popcorn.movie.repository.MovieRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MovieService {
@@ -34,10 +35,12 @@ public class MovieService {
         validateMovie(movie);
 
         movieRepository.save(movie);
-        saveDirectors(movie.getDirectedBy());
-        saveActors(movie.getCast());
-        movieRepository.relateActorsToMovie(movie.getCast(), movie);
-        movieRepository.relateDirectorsToMovie(movie.getDirectedBy(), movie);
+        List<Director> directors = saveDirectors(movie.getDirectedBy());
+        List<Actor> actors = saveActors(movie.getCast());
+
+        movie = movieRepository.findByName(movie.getName());
+        movieRepository.relateActorsToMovie(actors, movie);
+        movieRepository.relateDirectorsToMovie(directors, movie);
 
         logger.info(String.format("The movie %s was persisted on database.", movie.getName()));
     }
@@ -54,16 +57,22 @@ public class MovieService {
         return movies;
     }
 
-    private void saveDirectors(List<Director> directors) {
+    private List<Director> saveDirectors(List<Director> directors) {
+        List<Director> result = new ArrayList<>();
         for (Director director : directors) {
             directorRepository.save(director);
+            result.add(directorRepository.findByName(director.getName()));
         }
+        return result;
     }
 
-    private void saveActors(List<Actor> actors) {
+    private List<Actor> saveActors(List<Actor> actors) {
+        List<Actor> result = new ArrayList<>();
         for (Actor actor : actors) {
             actorRepository.save(actor);
+            result.add(actorRepository.findByName(actor.getName()));
         }
+        return result;
     }
 
     private void validateMovie(Movie movie) throws CastMissingException, DirectedByMissingException, MovieAlreadyPersistedException {
