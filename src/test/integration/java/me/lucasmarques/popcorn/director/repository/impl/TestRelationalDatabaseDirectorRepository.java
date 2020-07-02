@@ -5,17 +5,24 @@ import me.lucasmarques.popcorn.infra.persistence.DatabaseName;
 import me.lucasmarques.popcorn.infra.persistence.mariadb.ConnectionDriver;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
-import javax.xml.crypto.Data;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
 public class TestRelationalDatabaseDirectorRepository {
 
-    ConnectionDriver driver = new ConnectionDriver();
-    RelationalDatabaseDirectorRepository repository = new RelationalDatabaseDirectorRepository(driver);
+    ConnectionDriver driver;
+    RelationalDatabaseDirectorRepository repository;
+
+    @Before
+    public void before() {
+        driver = new ConnectionDriver();
+        repository = new RelationalDatabaseDirectorRepository(driver);
+    }
 
     @After
     public void after() {
@@ -23,8 +30,11 @@ public class TestRelationalDatabaseDirectorRepository {
         if (director != null) {
             String sql = String.format("DELETE FROM %s WHERE id = '%s'", DatabaseName.DIRECTORS.value, director.getId());
             try {
-                driver.executeSql(sql);
+                ResultSet resultSet = driver.executeSql(sql);
+                resultSet.close();
             } catch (SQLException e) {
+            } finally {
+                driver.close();
             }
         }
     }

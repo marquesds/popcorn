@@ -35,8 +35,9 @@ public class RelationalDatabaseDirectorRepository implements DirectorRepository 
 
         if (findByName(director.getName()) == null) {
             try {
-                driver.executeSql(sql);
+                ResultSet resultSet = driver.executeSql(sql);
                 result = director;
+                resultSet.close();
             } catch (SQLException e) {
                 logger.error(String.format("Could not process insert: %s. Error: %s", sql, e.getMessage()));
             } finally {
@@ -57,6 +58,7 @@ public class RelationalDatabaseDirectorRepository implements DirectorRepository 
                 director = buildDirector(result.getString("id"), result.getString("name"),
                         result.getString("created_at"), result.getString("updated_at"));
             }
+            result.close();
         } catch (SQLException e) {
             logger.error(String.format("Could not process query: %s. Error: %s", query, e.getMessage()));
         } finally {
@@ -82,6 +84,7 @@ public class RelationalDatabaseDirectorRepository implements DirectorRepository 
                         result.getString("created_at"), result.getString("updated_at"));
                 directors.add(director);
             }
+            result.close();
         } catch (SQLException e) {
             logger.error(String.format("Could not process query: %s. Error: %s", query, e.getMessage()));
         } finally {

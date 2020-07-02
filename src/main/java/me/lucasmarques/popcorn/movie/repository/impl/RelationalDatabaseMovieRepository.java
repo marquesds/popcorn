@@ -44,8 +44,9 @@ public class RelationalDatabaseMovieRepository implements MovieRepository {
 
         if (findByName(movie.getName()) == null) {
             try {
-                driver.executeSql(sql);
+                ResultSet resultSet = driver.executeSql(sql);
                 result = movie;
+                resultSet.close();
             } catch (SQLException e) {
                 logger.error(String.format("Could not process insert: %s. Error: %s", sql, e.getMessage()));
             } finally {
@@ -74,8 +75,9 @@ public class RelationalDatabaseMovieRepository implements MovieRepository {
             String sql = String.format("INSERT INTO %s (movie_id, actor_id) VALUES ('%s', '%s')",
                     DatabaseName.MOVIES_ACTORS.value, movie.getId(), actor.getId());
             try {
-                driver.executeSql(sql);
+                ResultSet resultSet = driver.executeSql(sql);
                 savedActors.add(actor);
+                resultSet.close();
             } catch (SQLException e) {
                 logger.error(String.format("Could not process insert: %s. Error: %s", sql, e.getMessage()));
             }
@@ -93,8 +95,9 @@ public class RelationalDatabaseMovieRepository implements MovieRepository {
             String sql = String.format("INSERT INTO %s (movie_id, director_id) VALUES ('%s', '%s')",
                     DatabaseName.MOVIES_DIRECTORS.value, movie.getId(), director.getId());
             try {
-                driver.executeSql(sql);
+                ResultSet resultSet = driver.executeSql(sql);
                 savedDirectors.add(director);
+                resultSet.close();
             } catch (SQLException e) {
                 logger.error(String.format("Could not process insert: %s. Error: %s", sql, e.getMessage()));
             } finally {
@@ -152,6 +155,7 @@ public class RelationalDatabaseMovieRepository implements MovieRepository {
                         result.getString("created_at"), result.getString("updated_at"));
                 movies.add(movie);
             }
+            result.close();
         } catch (SQLException e) {
             logger.error(String.format("Could not process query: %s. Error: %s", query, e.getMessage()));
         } finally {
