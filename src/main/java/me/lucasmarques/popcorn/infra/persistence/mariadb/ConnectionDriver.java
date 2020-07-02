@@ -2,6 +2,7 @@ package me.lucasmarques.popcorn.infra.persistence.mariadb;
 
 import me.lucasmarques.popcorn.infra.config.SystemConfig;
 import me.lucasmarques.popcorn.infra.persistence.RelationalDatabaseConnectionDriver;
+import me.lucasmarques.popcorn.shared.text.sanitizer.StringSanitizer;
 
 import java.sql.*;
 
@@ -34,7 +35,7 @@ public class ConnectionDriver implements RelationalDatabaseConnectionDriver {
     }
 
     public ResultSet executeSql(String sql) throws SQLException {
-        PreparedStatement preparedStatement = getConnection().prepareStatement(sql);
+        PreparedStatement preparedStatement = getConnection().prepareStatement(StringSanitizer.sanitize(sql));
         return preparedStatement.executeQuery();
     }
 }
