@@ -22,6 +22,7 @@ $ make start
 
 If this is your first time running the tests, you'll need to execute the following commands:
 ```shell
+$ cp .env.template .env
 $ make testdb
 $ make testall
 ```
