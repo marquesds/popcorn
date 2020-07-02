@@ -13,5 +13,5 @@ start:
 stop:
 	docker-compose -f docker-compose.yml down
 
-test:
-	ENV=test mvn test
+testall:
+	ENVIRONMENT=test mvn test

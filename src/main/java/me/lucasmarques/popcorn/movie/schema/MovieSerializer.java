@@ -15,7 +15,7 @@ public class MovieSerializer {
 
     public static String serialize(Movie movie) {
         Gson gson = new Gson();
-        Map<String, Object> movieMap = commomValues(movie);
+        Map<String, Object> movieMap = commonValues(movie);
 
         movieMap.put("id", movie.getId());
         movieMap.put("created_at", movie.getCreatedAt().toString());
@@ -26,7 +26,7 @@ public class MovieSerializer {
 
     public static String serializeNonTransient(Movie movie) {
         Gson gson = new Gson();
-        Map<String, Object> movieMap = commomValues(movie);
+        Map<String, Object> movieMap = commonValues(movie);
         return gson.toJson(movieMap);
     }
 
@@ -34,7 +34,7 @@ public class MovieSerializer {
         return movies.stream().map(MovieSerializer::serialize).collect(Collectors.toList());
     }
 
-    private static Map<String, Object> commomValues(Movie movie) {
+    private static Map<String, Object> commonValues(Movie movie) {
         Map<String, Object> movieMap = new HashMap<>();
 
         movieMap.put("name", movie.getName());

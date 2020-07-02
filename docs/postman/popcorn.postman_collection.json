@@ -1,0 +1,145 @@
+{
+	"info": {
+		"_postman_id": "2fa47695-4cca-483c-9f6d-9eef5fc37c48",
+		"name": "popcorn",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Not Found request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/movies",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"movies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Find censored movies",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/movies?censura=CENSURADO",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"movies"
+					],
+					"query": [
+						{
+							"key": "censura",
+							"value": "CENSURADO"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Find not censored movies",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/movies?censura=SEM_CENSURA",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"movies"
+					],
+					"query": [
+						{
+							"key": "censura",
+							"value": "SEM_CENSURA"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Try to save an existent movie",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"cast\": [\n        \"Donald Glover\",\n        \"Seth Rogen\",\n        \"Chiwetel Ejiofor\",\n        \"Alfre Woodard\",\n        \"Billy Eichner\",\n        \"John Kani\",\n        \"John Oliver\",\n        \"Beyoncé Knowles-Carter\"\n    ],\n    \"directed_by\": [\n        \"Jon Favreau\"\n    ],\n    \"name\": \"Lion King\",\n    \"rating\": \"G\",\n    \"launch_date\": \"2019-07-09\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/movies",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"movies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Save a new movie",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Interstellar\",\n    \"launch_date\": \"2014-10-26\",\n    \"rating\": \"PG\",\n    \"directed_by\": [\n        \"Christopher Nolan\"\n    ],\n    \"cast\": [\n        \"Matthew McConaughey\",\n        \"Anne Hathaway\",\n        \"Jessica Chastain\",\n        \"Casey Affleck\",\n        \"Wes Bentley\"\n    ]\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/movies",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"movies"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

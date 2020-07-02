@@ -8,7 +8,7 @@ import me.lucasmarques.popcorn.infra.config.SystemConfig;
 import me.lucasmarques.popcorn.infra.persistence.mariadb.ConnectionDriver;
 import me.lucasmarques.popcorn.movie.model.Movie;
 import me.lucasmarques.popcorn.movie.model.Rating;
-import me.lucasmarques.popcorn.utils.TestUtils;
+import me.lucasmarques.popcorn.test.utils.TestUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

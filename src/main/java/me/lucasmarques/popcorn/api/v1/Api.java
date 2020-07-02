@@ -4,6 +4,7 @@ import me.lucasmarques.popcorn.actor.repository.ActorRepository;
 import me.lucasmarques.popcorn.actor.repository.impl.RelationalDatabaseActorRepository;
 import me.lucasmarques.popcorn.director.repository.DirectorRepository;
 import me.lucasmarques.popcorn.director.repository.impl.RelationalDatabaseDirectorRepository;
+import me.lucasmarques.popcorn.infra.config.SystemConfig;
 import me.lucasmarques.popcorn.infra.persistence.mariadb.ConnectionDriver;
 import me.lucasmarques.popcorn.movie.exception.*;
 import me.lucasmarques.popcorn.movie.model.Censorship;
@@ -20,6 +21,9 @@ public class Api {
 
     public static void main(String[] args) {
 
+        SystemConfig config = SystemConfig.getInstance();
+        int port = config.getEnvironment().equals("test") ? config.getTestServicePort() : config.getServicePort();
+
         ConnectionDriver connection = new ConnectionDriver();
 
         ActorRepository actorRepository = new RelationalDatabaseActorRepository(connection);
@@ -27,6 +31,8 @@ public class Api {
         MovieRepository movieRepository = new RelationalDatabaseMovieRepository(connection, directorRepository, actorRepository);
 
         MovieService service = new MovieService(movieRepository, directorRepository, actorRepository);
+
+        port(port);
 
         path("/api", () -> {
             path("/v1", () -> {

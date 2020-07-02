@@ -18,7 +18,7 @@ import me.lucasmarques.popcorn.movie.repository.impl.RelationalDatabaseMovieRepo
 import me.lucasmarques.popcorn.movie.schema.MovieDeserializer;
 import me.lucasmarques.popcorn.movie.schema.MovieSerializer;
 import me.lucasmarques.popcorn.movie.service.MovieService;
-import me.lucasmarques.popcorn.utils.TestUtils;
+import me.lucasmarques.popcorn.test.utils.TestUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -40,7 +40,7 @@ public class TestApi {
 
     private final SystemConfig config = SystemConfig.getInstance();
 
-    private final String baseUrl = "http://localhost:4567/api/v1/movies";
+    private final String baseUrl = "http://localhost:4000/api/v1/movies";
 
     private MovieService getService() {
         ConnectionDriver connection = new ConnectionDriver();

@@ -41,6 +41,14 @@ public class SystemConfig {
         return application.getString("environment");
     }
 
+    public int getServicePort() {
+        return application.getInt("port");
+    }
+
+    public int getTestServicePort() {
+        return application.getInt("testPort");
+    }
+
     public String getDatabaseUrl() {
         return database.getString("url");
     }

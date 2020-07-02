@@ -1,5 +1,18 @@
 version: '3'
 services:
+  popcorn:
+    build: .
+    container_name: "popcorn"
+    environment:
+      - ENVIRONMENT=development
+    ports:
+      - 8080:4567
+    links:
+      - db
+    depends_on:
+      - db
+    networks:
+      - popcorn_network
   db:
     image: mariadb:10.5.4
     restart: always
@@ -10,7 +23,10 @@ services:
       - 3307:3306
     volumes:
       - popcorn-data:/var/lib/mysql
-
+    networks:
+      popcorn_network:
+        aliases:
+          - mariadb.popcorn.io
 volumes:
   popcorn-data:
 

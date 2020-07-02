@@ -2,7 +2,7 @@ package me.lucasmarques.popcorn.actor.repository.impl;
 
 import me.lucasmarques.popcorn.actor.model.Actor;
 import me.lucasmarques.popcorn.infra.persistence.mariadb.ConnectionDriver;
-import me.lucasmarques.popcorn.utils.TestUtils;
+import me.lucasmarques.popcorn.test.utils.TestUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
