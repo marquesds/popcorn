@@ -34,7 +34,7 @@ $ make testall
 
 ## Documentation
 
-You can import the Postman's collection wit some requests [here](docs/postman/popcorn.postman_collection.json).
+You can import the Postman's collection with some requests [here](docs/postman/popcorn.postman_collection.json).
 
 Links for entire documentation:
 
